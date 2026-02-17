@@ -85,20 +85,29 @@ function showRecommendations(keyword) {
 
   clearResults();
 
-  // Task 8: recommendations for beach/temple/country
   let items = [];
-  if (keyword === "beach") items = travelData.beaches || [];
-  if (keyword === "temple") items = travelData.temples || [];
-  if (keyword === "country") items = travelData.countries || [];
+
+  if (keyword === "beach") {
+    items = travelData.beaches || [];
+    setHint("Showing recommendations for: beach");
+  } else if (keyword === "temple") {
+    items = travelData.temples || [];
+    setHint("Showing recommendations for: temple");
+  } else if (keyword === "country") {
+    // Flatten: countries -> cities (so each item has imageUrl/description)
+    const countries = travelData.countries || [];
+    items = countries.flatMap(c => c.cities || []);
+    setHint("Showing recommendations for: country");
+  } else {
+    setHint(`No recommendations found for "${keyword}". Try beach, temple, or country.`);
+    return;
+  }
 
   if (!items.length) {
     setHint(`No recommendations found for "${keyword}". Try beach, temple, or country.`);
     return;
   }
 
-  setHint(`Showing recommendations for: ${keyword}`);
-
-  // Show at least two (assuming JSON provides 2+)
   items.slice(0, 6).forEach(renderCard);
 }
 
