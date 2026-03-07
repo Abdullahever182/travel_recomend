@@ -16,7 +16,8 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Task 6: Fetch JSON using fetch API
-  fetch("travel_recommendation_api.json")
+  // UPDATED: use "./" so it works reliably relative to the HTML file location
+  fetch("./travel_recommendation_api.json")
     .then((res) => {
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return res.json();
@@ -24,10 +25,14 @@ document.addEventListener("DOMContentLoaded", () => {
     .then((data) => {
       travelData = data;
       console.log("Loaded travel data:", data); // Task 6 check
+
+      // UPDATED: Show beach recommendations automatically on page load
+      // This will display your 2 beach recommendations immediately.
+      showRecommendations("beach");
     })
     .catch((err) => {
       console.error("Failed to load JSON:", err);
-      setHint("Could not load travel_recommendation_api.json. Run using a local server.");
+      setHint("Could not load travel_recommendation_api.json. Check the file path on GitHub Pages.");
     });
 
   // Task 7: Show results only after Search button click
@@ -52,11 +57,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Contact form (simple UX)
   const contactForm = document.getElementById("contactForm");
-  contactForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    alert("Thanks! Your message has been submitted.");
-    contactForm.reset();
-  });
+
+  // UPDATED: safety check (prevents errors if the form is missing for any reason)
+  if (contactForm) {
+    contactForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      alert("Thanks! Your message has been submitted.");
+      contactForm.reset();
+    });
+  }
 });
 
 function normalizeKeyword(raw) {
